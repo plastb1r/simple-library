@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Users</title>
+</head>
+
+<body>
+    <header>
+        <ul>
+          <li><p th:text="${'Hello ' + loggedInUser + '!'}"></p></li>
+          <li><a href="/logout">Logout</a></li>
+          <li><a href="/books">Books</a></li>
+          <li><a href="/users">Users</a></li>
+        </ul>
+    </header>
+
+    <br>
+    
+    <main>
+        <div class="add-user">
+            <form action="users/add" method="POST">
+                <label for="name">Name:</label>
+                <input type="text" name="name" />
+                <label for="password">Password:</label>
+                <input type="password" name="password" />
+                <input type="submit" value="Add User" />
+            </form>
+        </div>
+        <table>
+            <tr>
+                <th>Name</th>
+                <th></th>
+            </tr>
+            <tr th:each="user : ${users}">
+                <td th:text="${user.getName()}">...</td>
+                <td>
+                    <form action="/users/delete" method="POST">
+                        <input type="hidden" name="name" th:attr="value=${user.getName()}" />
+                        <input type="submit" value="Delete" />
+                    </form>
+                </td>
+            </tr>
+        </table>
+
+        <br>
+
+        <p th:if="${isSuccess == 'Error'}">Error</p>
+    </main>
+</body>
+
+</html>

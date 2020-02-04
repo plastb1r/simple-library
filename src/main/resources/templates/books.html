@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Books</title>
+</head>
+
+<body>
+    <header>
+        <ul>
+          <li><p th:text="${'Hello ' + loggedInUser + '!'}"></p></li>
+          <li><a href="/logout">Logout</a></li>
+          <li><a href="/books">Books</a></li>
+          <li><a href="/users">Users</a></li>
+        </ul>
+    </header>
+    
+    <br>
+    
+    <main>
+        <div class="add-book">
+            <form action="books/add" method="post">
+                <label for="isn">ISN:</label>
+                <input type="text" id="isn" name="isn" />
+                <label for="author">Author:</label>
+                <input type="text" id="author" name="author" />
+                <label for="name">Name:</label>
+                <input type="text" id="name" name="name" />
+                <input type="hidden" name="owner" value="free" />
+                <input type="submit" value="Add Book" />
+            </form>
+        </div>
+
+        <br>
+
+        <table>
+            <tr>
+                <th>ISN</th>
+                <th>Author</th>
+                <th>Name</th>
+                <th>Owner</th>
+                <th> </th>
+            </tr>
+            <tr th:each="book : ${books}">
+                <td th:text="${book.getIsn()}">...</td>
+                <td th:text="${book.getAuthor()}">...</td>
+                <td th:text="${book.getName()}">...</td>
+                <td>
+                    <div class="book-owner" th:switch="${book.getOwner()}">
+                        <form th:case="${loggedInUser}" action="/books/return" method="POST">
+                            <input type="hidden" name="isn" th:attr="value=${book.getIsn()}" />
+                            <input type="submit" value="Return" /></form>
+                        <form th:case="${null}" action="/books/take" method="POST">
+                            <input type="hidden" name="isn" th:attr="value=${book.getIsn()}" />
+                            <input type="submit" value="Take" /></form>
+                        <p th:case="*" th:text="${book.getOwner()}">...</p>
+                </td>
+                <td>
+                    <form action="/books/delete" method="POST">
+                        <input type="hidden" name="isn" th:attr="value=${book.getIsn()}" />
+                        <input type="submit" value="Delete" />
+                    </form>
+                </td>
+            </tr>
+        </table>
+
+        <br />
+
+        <a th:href="@{/books(pages=${nextPage})}">Next page</a>
+        <p th:if="${isSuccess == 'Error'}">Error</p>
+    </main>
+</body>
+
+</html>
