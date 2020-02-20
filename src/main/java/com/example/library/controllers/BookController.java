@@ -8,6 +8,7 @@ import com.example.library.services.BookService;
 import com.example.library.services.UserService;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -55,6 +56,7 @@ public class BookController {
     public String deleteBook(@RequestParam @NotNull String isn, RedirectAttributes ra) {
         ra.addFlashAttribute("isSuccess", bookService.deleteBook(isn));
         return "redirect:/books";
+       // ResponseEntity
     }
 
 }
